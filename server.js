@@ -1,8 +1,21 @@
-const app = require("./app");
-const config = require("./app/config");
+//Cài đặt kết nối server
+    const app = require("./app");
+    const config = require("./app/config");
+    const MongoDB = require("./app/utils/mongodb.util");
 
-//Start server
-const PORT = config.app.port;
-app.listen(PORT, () => {
-  console.log(`Máy chủ đang chạy trên cổng:${PORT}.`);
-});
+    async function startServer(){
+        try {
+            await MongoDB.connect(config.db.uri);
+            console.log("Connect to the database!");
+
+           const PORT = config.app.port;
+           app.listen(PORT, ()=>{
+                console.log(`Server is running pn the post ${PORT}`);
+           });
+        } catch (error){
+           console.log("Cannot connect to the Database!",error);
+           process.exit();
+        }
+    }
+    startServer();
+
